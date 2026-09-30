@@ -1,3 +1,4 @@
+import type { ProjectLibrary, ProjectMeta } from './projectLibrary';
 import type { StoryDocument, StoryScene, StoryStats } from './story';
 
 export function orderedScenes(story: StoryDocument): StoryScene[] {
@@ -42,4 +43,55 @@ export function sanitizeStory(input: unknown): StoryDocument | null {
     return null;
   }
   return candidate as StoryDocument;
+}
+
+export function buildProjectMeta(story: StoryDocument, archived = false, createdAt = story.updatedAt): ProjectMeta {
+  return {
+    id: story.id,
+    title: story.title,
+    status: story.status,
+    archived,
+    createdAt,
+    updatedAt: story.updatedAt,
+    stats: getStats(story),
+  };
+}
+
+export function sanitizeProjectMeta(input: unknown): ProjectMeta | null {
+  if (!input || typeof input !== 'object') return null;
+  const candidate = input as Partial<ProjectMeta>;
+  if (
+    typeof candidate.id !== 'string' ||
+    typeof candidate.title !== 'string' ||
+    (candidate.status !== 'draft' && candidate.status !== 'complete') ||
+    typeof candidate.archived !== 'boolean' ||
+    typeof candidate.createdAt !== 'string' ||
+    typeof candidate.updatedAt !== 'string' ||
+    !candidate.stats ||
+    typeof candidate.stats !== 'object'
+  ) {
+    return null;
+  }
+  return candidate as ProjectMeta;
+}
+
+export function sanitizeLibrary(input: unknown): ProjectLibrary | null {
+  if (!input || typeof input !== 'object') return null;
+  const candidate = input as Partial<ProjectLibrary>;
+  if (candidate.version !== 2 || !Array.isArray(candidate.projects) || typeof candidate.activeProjectId !== 'string') {
+    return null;
+  }
+  const projects = candidate.projects
+    .map((item) => sanitizeProjectMeta(item))
+    .filter((item): item is ProjectMeta => item !== null);
+  if (projects.length === 0 || !projects.some((project) => project.id === candidate.activeProjectId)) return null;
+  return { version: 2, activeProjectId: candidate.activeProjectId, projects };
+}
+
+export function createLibraryFromStories(stories: StoryDocument[], activeProjectId?: string): ProjectLibrary {
+  const projects = stories.map((story) => buildProjectMeta(story));
+  const activeId = activeProjectId && projects.some((project) => project.id === activeProjectId)
+    ? activeProjectId
+    : projects[0]?.id ?? '';
+  return { version: 2, activeProjectId: activeId, projects };
 }

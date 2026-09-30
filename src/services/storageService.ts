@@ -1,28 +1,52 @@
-const STORAGE_KEY = 'story-architect.document.v1';
+export const LEGACY_DOCUMENT_KEY = 'story-architect.document.v1';
+export const LIBRARY_STORAGE_KEY = 'story-architect.library.v2';
+export const ACTIVE_POINTER_KEY = 'story-architect.active-project.v2';
+const PROJECT_KEY_PREFIX = 'story-architect.project.v2.';
+
+export function projectStorageKey(projectId: string): string {
+  return `${PROJECT_KEY_PREFIX}${projectId}`;
+}
+
+export function isProjectStorageKey(key: string): boolean {
+  return key.startsWith(PROJECT_KEY_PREFIX);
+}
+
+export function projectIdFromStorageKey(key: string): string {
+  return key.slice(PROJECT_KEY_PREFIX.length);
+}
 
 export interface StorageService {
-  read(): string | null;
-  write(value: string): void;
+  read(key: string): string | null;
+  write(key: string, value: string): void;
+  keys(): string[];
 }
 
 export class BrowserStorageService implements StorageService {
-  read(): string | null {
-    return window.localStorage.getItem(STORAGE_KEY);
+  read(key: string): string | null {
+    return window.localStorage.getItem(key);
   }
 
-  write(value: string): void {
-    window.localStorage.setItem(STORAGE_KEY, value);
+  write(key: string, value: string): void {
+    window.localStorage.setItem(key, value);
+  }
+
+  keys(): string[] {
+    return Object.keys(window.localStorage);
   }
 }
 
 export class MemoryStorageService implements StorageService {
-  private value: string | null = null;
+  private readonly values = new Map<string, string>();
 
-  read(): string | null {
-    return this.value;
+  read(key: string): string | null {
+    return this.values.has(key) ? this.values.get(key)! : null;
   }
 
-  write(value: string): void {
-    this.value = value;
+  write(key: string, value: string): void {
+    this.values.set(key, value);
+  }
+
+  keys(): string[] {
+    return [...this.values.keys()];
   }
 }
