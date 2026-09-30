@@ -2,16 +2,48 @@
 
 :root { font-family: 'DM Sans', sans-serif; color: #26231f; background: #f4f0e8; font-synthesis: none; --ink: #26231f; --muted: #8a8379; --line: #e2dbd0; --paper: #fbfaf6; --cream: #f4f0e8; --coral: #e56c52; --blue: #6d8fc2; --gold: #e6ac56; --sage: #8ba98a; --violet: #a68cc2; }
 * { box-sizing: border-box; }
-body { margin: 0; min-width: 1080px; background: var(--cream); }
+body { margin: 0; min-width: 1100px; background: var(--cream); }
 button, input, textarea, select { font: inherit; }
 button { cursor: pointer; }
 .app-shell { display: flex; min-height: 100vh; }
-.sidebar { width: 238px; background: #26231f; color: #faf7f0; display: flex; flex-direction: column; padding: 27px 18px 22px; }
+.sidebar { width: 264px; flex: none; background: #26231f; color: #faf7f0; display: flex; flex-direction: column; padding: 27px 16px 22px; }
 .brand { font-size: 16px; font-weight: 700; letter-spacing: -.3px; display: flex; gap: 9px; align-items: center; padding: 0 9px 34px; }
 .brand-mark { color: #eeb26a; font-size: 22px; line-height: 1; }
-.project-switcher { padding: 17px 14px; border: 1px solid #4a4640; border-radius: 10px; position: relative; display: grid; gap: 8px; margin-bottom: 23px; }
-.project-switcher strong { font-size: 14px; }
-.project-dot { position: absolute; right: 14px; top: 17px; width: 7px; height: 7px; background: var(--coral); border-radius: 50%; }
+.project-library { display: flex; flex-direction: column; gap: 9px; margin-bottom: 21px; }
+.pl-heading { padding: 0 2px; }
+.pl-create { display: flex; gap: 6px; }
+.pl-create input { flex: 1; min-width: 0; background: #332f29; border: 1px solid #4a4640; color: #fffaf1; border-radius: 6px; padding: 8px 10px; font-size: 11px; }
+.pl-create input::placeholder { color: #7d766c; }
+.pl-add { width: 33px; border: 0; border-radius: 6px; background: var(--coral); color: #fff; font-size: 17px; line-height: 1; }
+.pl-add:hover { filter: brightness(1.08); }
+.pl-list { display: grid; gap: 7px; max-height: 320px; overflow-y: auto; padding-right: 2px; }
+.pl-list::-webkit-scrollbar { width: 5px; }
+.pl-list::-webkit-scrollbar-thumb { background: #4a4640; border-radius: 4px; }
+.pl-item { border: 1px solid #3f3b35; border-radius: 8px; padding: 9px 10px; display: grid; gap: 7px; background: #2e2a25; cursor: pointer; transition: border-color .15s ease, background .15s ease; }
+.pl-item:hover { border-color: #5c564d; background: #332f29; }
+.pl-item.active { border-color: #6f6453; background: #3b352c; }
+.pl-item-top { display: flex; align-items: center; gap: 8px; }
+.pl-item-top strong { font-size: 12.5px; font-weight: 600; color: #f3ede3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+.pl-item.active .pl-item-top strong { color: #ffe9c7; }
+.pl-dot { flex: none; width: 6px; height: 6px; background: var(--coral); border-radius: 50%; }
+.pl-meta { display: flex; align-items: center; gap: 9px; font: 10px 'DM Mono', monospace; color: #958d82; }
+.pl-pct { color: #cdb68f; font-weight: 500; }
+.pl-unresolved { display: inline-flex; align-items: center; gap: 4px; color: #9aaa9b; }
+.pl-unresolved i { width: 5px; height: 5px; border-radius: 50%; background: #7f9180; }
+.pl-unresolved.alert { color: #e8a08c; }
+.pl-unresolved.alert i { background: var(--coral); }
+.pl-badge { font-style: normal; font-family: 'DM Sans', sans-serif; border-radius: 3px; padding: 2px 5px; letter-spacing: .2px; }
+.pl-badge.done { background: #3c4f40; color: #a7d0b3; }
+.pl-badge.archived { background: #47423b; color: #b3aa9d; }
+.pl-track { height: 3px !important; background: #48423a !important; }
+.pl-track span { background: linear-gradient(90deg, #e6ac56, #e56c52); }
+.pl-actions { display: flex; gap: 12px; }
+.pl-actions button { border: 0; background: none; padding: 0; color: #877f74; font-size: 10px; }
+.pl-actions button:hover { color: #f3ede3; }
+.pl-rename { width: 100%; background: #332f29; border: 1px solid var(--coral); color: #fffaf1; border-radius: 5px; padding: 5px 7px; font-size: 12px; }
+.pl-empty { color: #7d766c; font-size: 11px; padding: 8px 4px; }
+.pl-toggle { background: none; border: 0; color: #877f74; font-size: 10px; text-align: left; padding: 2px 3px 0; }
+.pl-toggle:hover { color: #d8cfc1; }
 .eyebrow { display: block; font: 500 10px 'DM Mono', monospace; letter-spacing: 1.1px; color: var(--muted); text-transform: uppercase; }
 .sidebar .eyebrow { color: #958d82; }
 .side-nav { display: grid; gap: 5px; }

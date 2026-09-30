@@ -50,6 +50,20 @@ export function createId(prefix: string): string {
   return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
+export function createBlankStory(title: string): StoryDocument {
+  return {
+    version: 1,
+    id: createId('story'),
+    title,
+    status: 'draft',
+    characters: [],
+    scenes: [],
+    clues: [],
+    selectedSceneId: '',
+    updatedAt: new Date().toISOString(),
+  };
+}
+
 export function createStarterStory(): StoryDocument {
   const miraId = 'character-mira';
   const oldHarborId = 'scene-old-harbor';
